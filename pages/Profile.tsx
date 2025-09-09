@@ -1,8 +1,26 @@
 
-import React from 'react';
-import { User, Mail, Calendar, Edit } from 'lucide-react';
+import React, { useState } from 'react';
+import { User, Mail, Calendar, Edit, Save, X } from 'lucide-react';
 
 const ProfilePage: React.FC = () => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState('Demo User');
+  const [tempName, setTempName] = useState('Demo User');
+
+  const handleEdit = () => {
+    setTempName(name);
+    setIsEditing(true);
+  };
+
+  const handleSave = () => {
+    setName(tempName);
+    setIsEditing(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+  };
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between">
@@ -15,10 +33,23 @@ const ProfilePage: React.FC = () => {
                 </p>
             </div>
         </div>
-        <button className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
-            <Edit className="mr-2 h-4 w-4" />
-            Edit Profile
-        </button>
+        {isEditing ? (
+            <div className="flex items-center gap-2">
+                 <button onClick={handleSave} className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                    <Save className="mr-2 h-4 w-4" />
+                    Save
+                </button>
+                 <button onClick={handleCancel} className="inline-flex items-center justify-center px-4 py-2 border border-gray-300 dark:border-gray-600 text-sm font-medium rounded-md shadow-sm text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <X className="mr-2 h-4 w-4" />
+                    Cancel
+                </button>
+            </div>
+        ) : (
+            <button onClick={handleEdit} className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Profile
+            </button>
+        )}
       </div>
 
       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md max-w-4xl mx-auto">
@@ -29,7 +60,16 @@ const ProfilePage: React.FC = () => {
                 alt="User Avatar" 
             />
             <div className="flex-1 text-center md:text-left">
-                <h3 className="text-2xl font-bold">Demo User</h3>
+                {isEditing ? (
+                    <input
+                        type="text"
+                        value={tempName}
+                        onChange={(e) => setTempName(e.target.value)}
+                        className="text-2xl font-bold bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 border rounded-md px-2 py-1"
+                    />
+                ) : (
+                    <h3 className="text-2xl font-bold">{name}</h3>
+                )}
                 <p className="text-gray-500 dark:text-gray-400">Administrator</p>
             </div>
         </div>
